@@ -1,6 +1,6 @@
-# Luxe Lipstick - Product Showcase
+#  Lipstick - Product Showcase
 
-A modern, one-page product showcase website for a lipstick product, built with React and Framer Motion. Features smooth animations, interactive elements, and a responsive design.
+ one-page product showcase website for a lipstick product, built with React and Framer Motion. Features smooth animations, interactive elements, and a responsive design.
 
 ## 🚀 Getting Started
 
