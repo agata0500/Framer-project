@@ -1,65 +1,333 @@
-// src/App.jsx
 import React from 'react';
-// We will import motion and AnimatedSection in the next step
+import { motion, useScroll, useTransform, useReducedMotion, useMotionValue } from 'framer-motion';
+import LipstickSVG from './components/LipstickSVG';
+import LetterAnimation from './components/LetterAnimation';
+import LipstickCarousel from './components/LipstickCarousel';
+
+// Lipstick hero image from public folder
+const lipstickHeroImage = '/lipstick-hero.png';
 
 function App() {
-  // Product Data (Smartwatch example)
+  const shouldReduceMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll();
+  
+  // Parallax effects - subtle movement
+  const heroY = useTransform(scrollYProgress, [0, 1], ['0%', '20%']);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+
+  // Product Data - Lipstick
   const product = {
-    name: "Aura Smartwatch Pro",
-    tagline: "Intelligence on Your Wrist",
+    heroSubtitle: "EVERY SHADE\nTELLS A STORY",
+    tagline: "Bold Color, Lasting Beauty",
+    description: "Experience the perfect blend of vibrant color and long-lasting wear with our premium lipstick collection. Each shade is carefully crafted to enhance your natural beauty.",
     features: [
-      "Always-On Retina Display", 
-      "2-Week Battery Life", 
-      "Advanced Health Monitoring"
+      {
+        title: "LONG-LASTING FORMULA",
+        description: "Up to 12 hours of vibrant color that stays put through meals and drinks."
+      },
+      {
+        title: "HYDRATING & COMFORTABLE",
+        description: "Infused with vitamin E and natural oils for a smooth, comfortable feel."
+      },
+      {
+        title: "INTENSE PIGMENTATION",
+        description: "Rich, bold colors with just one swipe for a flawless finish."
+      }
     ],
     variants: [
-      { id: 1, name: "Midnight Black", color: "#333333" },
-      { id: 2, name: "Starlight Silver", color: "#e0e0e0" },
+      { id: 1, name: "CLASSIC RED", color: "#FF1744" },
+      { id: 2, name: "ROSE PINK", color: "#FF4081" },
+      { id: 3, name: "BERRY WINE", color: "#E91E63" },
+      { id: 4, name: "CORAL SUNSET", color: "#FF6F00" },
+    ],
+    carouselImages: [
+      { id: 1, name: "CLASSIC RED", url: "/imgi_1001_mac_sku_S4K029_1x1_0.png" },
+      { id: 2, name: "ROSE PINK", url: "/imgi_1058_mac_sku_S4K037_1x1_0.png" },
+      { id: 3, name: "BERRY WINE", url: "/imgi_1065_mac_sku_S4K038_1x1_0.png" },
+      { id: 4, name: "CORAL SUNSET", url: "/imgi_1072_mac_sku_S4K039_1x1_0.png" },
+      { id: 5, name: "DEEP BERRY", url: "/imgi_1079_mac_sku_S4K051_1x1_0.png" },
+      { id: 6, name: "VINTAGE ROSE", url: "/imgi_976_mac_sku_S4K021_1x1_0.png" },
+      { id: 7, name: "BOLD RED", url: "/imgi_1628_mac_sku_SMXF05_EMEA_1x1_0.png" },
+      { id: 8, name: "SIGNATURE RED", url: "/imgi_1629_mac_sku_SMXF05_EMEA_1x1_0.png" },
     ]
+  };
+
+  // Animation variants - dramatic and cinematic
+  const fadeInUp = {
+    initial: { 
+      opacity: shouldReduceMotion ? 1 : 0, 
+      y: shouldReduceMotion ? 0 : 60 
+    },
+    whileInView: { 
+      opacity: 1, 
+      y: 0,
+      transition: { 
+        duration: shouldReduceMotion ? 0 : 1,
+        ease: [0.25, 0.46, 0.45, 0.94]
+      }
+    },
+    viewport: { once: true, margin: "-100px" }
+  };
+
+  const scaleIn = {
+    initial: { 
+      opacity: shouldReduceMotion ? 1 : 0, 
+      scale: shouldReduceMotion ? 1 : 0.8 
+    },
+    whileInView: { 
+      opacity: 1, 
+      scale: 1,
+      transition: { 
+        duration: shouldReduceMotion ? 0 : 1.2,
+        ease: [0.25, 0.46, 0.45, 0.94]
+      }
+    },
+    viewport: { once: true, margin: "-100px" }
+  };
+
+  const slideInLeft = {
+    initial: { 
+      opacity: shouldReduceMotion ? 1 : 0, 
+      x: shouldReduceMotion ? 0 : -100 
+    },
+    whileInView: { 
+      opacity: 1, 
+      x: 0,
+      transition: { 
+        duration: shouldReduceMotion ? 0 : 1,
+        ease: [0.25, 0.46, 0.45, 0.94]
+      }
+    },
+    viewport: { once: true, margin: "-100px" }
+  };
+
+  const slideInRight = {
+    initial: { 
+      opacity: shouldReduceMotion ? 1 : 0, 
+      x: shouldReduceMotion ? 0 : 100 
+    },
+    whileInView: { 
+      opacity: 1, 
+      x: 0,
+      transition: { 
+        duration: shouldReduceMotion ? 0 : 1,
+        ease: [0.25, 0.46, 0.45, 0.94]
+      }
+    },
+    viewport: { once: true, margin: "-100px" }
+  };
+
+  const staggerContainer = {
+    initial: { opacity: 0 },
+    whileInView: {
+      opacity: 1,
+      transition: {
+        staggerChildren: shouldReduceMotion ? 0 : 0.1,
+        delayChildren: shouldReduceMotion ? 0 : 0.2
+      }
+    },
+    viewport: { once: true, margin: "-100px" }
+  };
+
+  // Interactive animations
+  const hoverScale = {
+    whileHover: shouldReduceMotion ? {} : { 
+      scale: 1.05,
+      transition: { duration: 0.3, ease: "easeOut" }
+    },
+    whileTap: shouldReduceMotion ? {} : { 
+      scale: 0.95 
+    }
+  };
+
+  const hoverLift = {
+    whileHover: shouldReduceMotion ? {} : {
+      y: -10,
+      transition: { duration: 0.3, ease: "easeOut" }
+    }
   };
 
   return (
     <div className="App">
-      {/* 1. Intro / Hero Section */}
+      {/* 1. Hero Section - Black Mango Style */}
       <section id="hero" className="hero-section">
-        <h1>{product.name}</h1>
-        <p>{product.tagline}</p>
-        <div className="product-image-container">
-          {/* Product Image Placeholder */}
-        </div>
-        <button>Discover Now</button>
-      </section>
-
-      {/* 2. Product Features Section */}
-      <section id="features" className="features-section">
-        <h2>Key Features</h2>
-        <ul className="features-list">
-          {product.features.map((feature, index) => (
-            <li key={index}>{feature}</li>
-          ))}
-        </ul>
-      </section>
-
-      {/* 3. Gallery or Variants Section */}
-      <section id="variants" className="variants-section">
-        <h2>Choose Your Style</h2>
-        <div className="variant-container">
-          {product.variants.map((variant) => (
-            <div 
-              key={variant.id} 
-              className="variant-card" 
-              style={{ backgroundColor: variant.color }}
+        <motion.div 
+          className="hero-background"
+        >
+          <motion.div 
+            className="hero-image-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 2, ease: "easeOut" }}
+            style={{ 
+              y: heroY, 
+              opacity: heroOpacity,
+            }}
+          >
+            <motion.img 
+              src={lipstickHeroImage}
+              alt="Luxe Lipstick"
+              className="product-image-hero"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+            />
+          </motion.div>
+        </motion.div>
+        
+        <div className="hero-content-wrapper">
+          <div className="hero-content">
+            <motion.h1 
+              className="hero-subtitle"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
             >
-              {variant.name}
-            </div>
-          ))}
+              <LetterAnimation 
+                text={product.heroSubtitle} 
+                shouldReduceMotion={shouldReduceMotion}
+                delay={0.8}
+              />
+            </motion.h1>
+            
+            <motion.p 
+              className="hero-description"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 2, ease: "easeOut" }}
+            >
+              {product.description}
+            </motion.p>
+            
+            <motion.button
+              className="cta-button hero-cta"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 2.5, ease: "easeOut" }}
+              whileHover={shouldReduceMotion ? {} : {
+                scale: 1.1,
+                boxShadow: "0 0 30px rgba(255, 64, 129, 0.5)",
+                transition: { duration: 0.3 }
+              }}
+              whileTap={shouldReduceMotion ? {} : { scale: 0.95 }}
+            >
+              DISCOVER NOW
+            </motion.button>
+          </div>
         </div>
       </section>
 
-      {/* 4. Call-to-Action Section */}
+      {/* 2. Features Section */}
+      <section id="features" className="features-section">
+        <h2 className="section-title">
+          <LetterAnimation 
+            text="KEY FEATURES" 
+            shouldReduceMotion={shouldReduceMotion}
+            useViewport={true}
+          />
+        </h2>
+        
+        <motion.div 
+          className="features-grid"
+          variants={staggerContainer}
+          initial="initial"
+          whileInView="whileInView"
+          viewport={{ once: true, margin: "-50px" }}
+        >
+          {product.features.map((feature, index) => (
+            <motion.div 
+              key={index}
+              variants={index % 2 === 0 ? slideInLeft : slideInRight}
+              className="feature-card"
+              {...hoverLift}
+              whileHover={shouldReduceMotion ? {} : {
+                borderColor: "#FF4081",
+                transition: { duration: 0.3 }
+              }}
+            >
+              <motion.h3
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.2 + 0.5 }}
+              >
+                {feature.title}
+              </motion.h3>
+              <motion.p
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.2 + 0.7 }}
+              >
+                {feature.description}
+              </motion.p>
+            </motion.div>
+          ))}
+        </motion.div>
+      </section>
+
+      {/* 3. Variants Section */}
+      <section id="variants" className="variants-section">
+        <h2 className="section-title">
+          <LetterAnimation 
+            text="CHOOSE YOUR SHADE" 
+            shouldReduceMotion={shouldReduceMotion}
+            useViewport={true}
+          />
+        </h2>
+        
+        <motion.div
+          initial="initial"
+          whileInView="whileInView"
+          variants={fadeInUp}
+          viewport={{ once: true, margin: "-50px" }}
+          className="carousel-section"
+        >
+          <LipstickCarousel 
+            images={product.carouselImages} 
+            shouldReduceMotion={shouldReduceMotion}
+          />
+        </motion.div>
+      </section>
+
+      {/* 4. CTA Section */}
       <section id="cta" className="cta-section">
-        <h2>Ready to Upgrade?</h2>
-        <button>Buy the Aura Pro</button>
+        <motion.div
+          className="cta-content"
+          variants={staggerContainer}
+          initial="initial"
+          whileInView="whileInView"
+          viewport={{ once: true, margin: "-100px" }}
+        >
+          <h2 className="cta-title">
+            <LetterAnimation 
+              text="READY TO TRANSFORM YOUR LOOK?" 
+              shouldReduceMotion={shouldReduceMotion}
+              useViewport={true}
+              delay={0.2}
+            />
+          </h2>
+          
+          <motion.p 
+            variants={fadeInUp} 
+            className="cta-description"
+          >
+            Experience the perfect blend of luxury and performance.
+          </motion.p>
+          
+          <motion.button
+            variants={scaleIn}
+            className="cta-button primary"
+            whileHover={shouldReduceMotion ? {} : {
+              scale: 1.1,
+              boxShadow: "0 0 40px rgba(255, 64, 129, 0.6)",
+              transition: { duration: 0.3 }
+            }}
+            whileTap={shouldReduceMotion ? {} : { scale: 0.95 }}
+          >
+            SHOP NOW
+          </motion.button>
+        </motion.div>
       </section>
     </div>
   );
