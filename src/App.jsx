@@ -3,6 +3,8 @@ import { motion, useScroll, useTransform, useReducedMotion, useMotionValue } fro
 import LipstickSVG from './components/LipstickSVG';
 import LetterAnimation from './components/LetterAnimation';
 import LipstickCarousel from './components/LipstickCarousel';
+import AnimatedProductImage from './components/AnimatedProductImage';
+import HorizontalScrollGallery from './components/HorizontalScrollGallery';
 
 // Lipstick hero image from public folder
 const lipstickHeroImage = '/lipstick-hero.png';
@@ -41,14 +43,22 @@ function App() {
       { id: 4, name: "CORAL SUNSET", color: "#FF6F00" },
     ],
     carouselImages: [
-      { id: 1, name: "CLASSIC RED", url: "/imgi_1001_mac_sku_S4K029_1x1_0.png" },
-      { id: 2, name: "ROSE PINK", url: "/imgi_1058_mac_sku_S4K037_1x1_0.png" },
-      { id: 3, name: "BERRY WINE", url: "/imgi_1065_mac_sku_S4K038_1x1_0.png" },
-      { id: 4, name: "CORAL SUNSET", url: "/imgi_1072_mac_sku_S4K039_1x1_0.png" },
-      { id: 5, name: "DEEP BERRY", url: "/imgi_1079_mac_sku_S4K051_1x1_0.png" },
-      { id: 6, name: "VINTAGE ROSE", url: "/imgi_976_mac_sku_S4K021_1x1_0.png" },
-      { id: 7, name: "BOLD RED", url: "/imgi_1628_mac_sku_SMXF05_EMEA_1x1_0.png" },
-      { id: 8, name: "SIGNATURE RED", url: "/imgi_1629_mac_sku_SMXF05_EMEA_1x1_0.png" },
+      { id: 1, name: "CLASSIC ", url: "/imgi_1001_mac_sku_S4K029_1x1_0.png" },
+      { id: 2, name: "ROSE ", url: "/imgi_1058_mac_sku_S4K037_1x1_0.png" },
+      { id: 3, name: "NATURAL", url: "/imgi_1065_mac_sku_S4K038_1x1_0.png" },
+      { id: 4, name: " SUNSET", url: "/imgi_1072_mac_sku_S4K039_1x1_0.png" },
+      { id: 5, name: "DEEP ", url: "/imgi_1079_mac_sku_S4K051_1x1_0.png" },
+      { id: 6, name: "VINTAGE", url: "/imgi_976_mac_sku_S4K021_1x1_0.png" },
+      { id: 7, name: "THANKS", url: "/imgi_1628_mac_sku_SMXF05_EMEA_1x1_0.png" },
+      { id: 8, name: "DAILY", url: "/imgi_1629_mac_sku_SMXF05_EMEA_1x1_0.png" },
+    ],
+    morphingGalleryImages: [
+      { id: 1, name: "PREMIUM SHADE 1", url: "/imgi_964_mac_sku_S4K013_1x1_2.png" },
+      { id: 2, name: "PREMIUM SHADE 2", url: "/imgi_965_mac_sku_S4K013_1x1_3.png" },
+      { id: 3, name: "PREMIUM SHADE 3", url: "/imgi_971_mac_sku_S4K017_1x1_2.png" },
+      { id: 4, name: "PREMIUM SHADE 4", url: "/imgi_951_mac_sku_S4K047_1x1_4.png" },
+      { id: 5, name: "PREMIUM SHADE 5", url: "/imgi_949_mac_sku_S4K047_1x1_2.png" },
+      { id: 6, name: "PREMIUM SHADE 6", url: "/imgi_943_mac_sku_S4K046_1x1_3.png" },
     ]
   };
 
@@ -190,15 +200,6 @@ function App() {
               />
             </motion.h1>
             
-            <motion.p 
-              className="hero-description"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 2, ease: "easeOut" }}
-            >
-              {product.description}
-            </motion.p>
-            
             <motion.button
               className="cta-button hero-cta"
               initial={{ opacity: 0, y: 20 }}
@@ -266,9 +267,50 @@ function App() {
         </motion.div>
       </section>
 
-      {/* 3. Variants Section */}
+      {/* 3. Horizontal Scroll Gallery Section */}
+      <section id="horizontal-gallery" className="horizontal-scroll-gallery-section">
+        <HorizontalScrollGallery 
+          images={product.morphingGalleryImages}
+          shouldReduceMotion={shouldReduceMotion}
+        />
+      </section>
+
+      {/* 4. Animated Product Section */}
+      <section id="animated-product" className="animated-product-section">
+        <motion.div
+          className="animated-product-content"
+          initial="initial"
+          whileInView="whileInView"
+          variants={staggerContainer}
+          viewport={{ once: true, margin: "-100px" }}
+        >
+          <motion.h2 
+            className="section-title"
+            variants={fadeInUp}
+          >
+            <LetterAnimation 
+              text="SHADE RANGE" 
+              shouldReduceMotion={shouldReduceMotion}
+              useViewport={true}
+            />
+          </motion.h2>
+          
+          <motion.div
+            variants={scaleIn}
+            className="animated-product-image-container"
+          >
+            <AnimatedProductImage 
+              src="/imgi_1087_mac_sku_SX5W03_3000x3000_3.png"
+              alt="Premium Lipstick"
+              shouldReduceMotion={shouldReduceMotion}
+            />
+          </motion.div>
+        </motion.div>
+      </section>
+
+      {/* 4. Variants Section */}
       <section id="variants" className="variants-section">
-        <h2 className="section-title">
+        <h2 className="section-title section-title-small">
           <LetterAnimation 
             text="CHOOSE YOUR SHADE" 
             shouldReduceMotion={shouldReduceMotion}
@@ -299,7 +341,7 @@ function App() {
           whileInView="whileInView"
           viewport={{ once: true, margin: "-100px" }}
         >
-          <h2 className="cta-title">
+          <h2 className="cta-title cta-title-small">
             <LetterAnimation 
               text="READY TO TRANSFORM YOUR LOOK?" 
               shouldReduceMotion={shouldReduceMotion}
